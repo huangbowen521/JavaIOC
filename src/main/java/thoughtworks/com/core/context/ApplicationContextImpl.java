@@ -1,10 +1,13 @@
 package thoughtworks.com.core.context;
 
+import sun.awt.windows.ThemeReader;
 import sun.tools.tree.NewArrayExpression;
 import thoughtworks.com.core.config.BeanConfig;
 import thoughtworks.com.core.config.BeanProperty;
 import thoughtworks.com.core.config.Configs;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -27,5 +30,48 @@ public class ApplicationContextImpl implements ApplicationContext {
 
     public <T> T getBean(String beanName)  {
         return null;
+    }
+
+    private void initBeans()
+    {
+        for(BeanConfig beanConfig : configs.getBeanConfigs())
+        {
+            try {
+                Object bean = this.getClass().getClassLoader().loadClass(beanConfig.getClassName()).newInstance();
+                beans.put(beanConfig.getName(), bean);
+
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void initProperties(BeanConfig beanConfig)
+    {
+        Object bean = beans.get(beanConfig.getName());
+        Method[] methods = bean.getClass().getMethods();
+        for (BeanProperty beanProperty : beanConfig.getBeanProperties())
+        {
+            for(Method method : methods)
+            {
+                if (method.getName().startsWith("set") && method.getName().substring(3).equalsIgnoreCase(beanProperty.getName())){
+                    try {
+                        method.invoke(bean,this.getClass().getClassLoader().loadClass(beanProperty.getRef()).newInstance());
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    } catch (InstantiationException e) {
+                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    }
+                }
+            }
+        }
     }
 }
