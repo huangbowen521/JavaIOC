@@ -1,5 +1,6 @@
 package thoughtworks.com.core.context;
 
+import thoughtworks.com.core.config.BeanConfig;
 import thoughtworks.com.core.config.BeanProperty;
 import thoughtworks.com.core.config.Configs;
 
@@ -27,12 +28,12 @@ public class ApplicationContextImpl implements ApplicationContext {
     }
 
     public <T> T getBean(String beanName)  {
-        return null;
+        return (T)beans.get(beanName);
     }
 
     private void initBeans()
     {
-        for(BeanConfig1 beanConfig : configs.getBeanConfigs())
+        for(BeanConfig beanConfig : configs.getBeanConfigs())
         {
             try {
                 Object bean = this.getClass().getClassLoader().loadClass(beanConfig.getClassName()).newInstance();
@@ -50,7 +51,7 @@ public class ApplicationContextImpl implements ApplicationContext {
         }
     }
 
-    private void initProperties(BeanConfig1 beanConfig)
+    private void initProperties(BeanConfig beanConfig)
     {
         Object bean = beans.get(beanConfig.getName());
         Method[] methods = bean.getClass().getMethods();

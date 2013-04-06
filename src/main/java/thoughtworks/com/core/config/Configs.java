@@ -1,7 +1,5 @@
 package thoughtworks.com.core.config;
 
-import thoughtworks.com.core.context.ApplicationContext;
-
 import java.util.List;
 
 /**
@@ -12,5 +10,5 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public interface Configs {
-    List<ApplicationContext.BeanConfig1> getBeanConfigs();
+    List<BeanConfig> getBeanConfigs();
 }
