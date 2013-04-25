@@ -1,5 +1,7 @@
 package thoughtworks.com.core.config;
 
+import thoughtworks.com.core.context.ApplicationContext;
+
 /**
  * Created with IntelliJ IDEA.
  * User: twer
@@ -30,5 +32,9 @@ public class SetterProperty {
     public SetterProperty(String name, String ref) {
         this.name = name;
         this.ref = ref;
+    }
+
+    public Object getThisInstance(ApplicationContext applicationContext) throws IllegalAccessException, InstantiationException {
+        return applicationContext.getBean(ref);
     }
 }
