@@ -1,9 +1,10 @@
 package thoughtworks.com.core.context;
 
 import thoughtworks.com.core.config.BeanSetting;
-import thoughtworks.com.core.config.SetterProperty;
-import thoughtworks.com.core.config.Configs;
+import thoughtworks.com.properties.SetterProperty;
+import thoughtworks.com.core.config.Settings;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,14 +17,14 @@ import java.util.concurrent.ConcurrentMap;
  * Time: 12:29 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ApplicationContextImpl implements ApplicationContext {
+public class ContainerImpl implements Container {
 
-    private Configs configs;
+    private Settings settings;
     ConcurrentMap<String, Object> beans = new ConcurrentHashMap<String, Object>();
     ConcurrentMap<String, Class> clazzs = new ConcurrentHashMap<String, Class>();
 
-    public ApplicationContextImpl(Configs configs) {
-        this.configs = configs;
+    public ContainerImpl(Settings settings) {
+        this.settings = settings;
         initBeans();
     }
 
@@ -33,7 +34,7 @@ public class ApplicationContextImpl implements ApplicationContext {
 
     private void initBeans()
     {
-        for(BeanSetting beanSetting : configs.getBeanConfigs())
+        for(BeanSetting beanSetting : settings.getBeanConfigs())
         {
             try {
                 Object bean = this.getClass().getClassLoader().loadClass(beanSetting.getClassName()).newInstance();
@@ -51,24 +52,19 @@ public class ApplicationContextImpl implements ApplicationContext {
         }
     }
 
-    private void initProperties(BeanSetting beanSetting)
-    {
+    private void initProperties(BeanSetting beanSetting) throws IllegalAccessException, InstantiationException {
         Object bean = beans.get(beanSetting.getName());
         Method[] methods = bean.getClass().getMethods();
+
+        Field[] fields = bean.getClass().getDeclaredFields();
+
+
         for (SetterProperty setterProperty : beanSetting.getSetterProperties())
         {
-            for(Method method : methods)
-            {
-                if (method.getName().startsWith("set") && method.getName().substring(3).equalsIgnoreCase(setterProperty.getName())){
-                    try {
-                        method.invoke(bean,clazzs.get(setterProperty.getRef()).newInstance());
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                    } catch (InvocationTargetException e) {
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                    } catch (InstantiationException e) {
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                    }
+            for (Field filed : fields){
+                if(filed.getName().equalsIgnoreCase(setterProperty.getName())){
+                    filed.setAccessible(true);
+                    filed.set(bean, setterProperty.getThisInstance(this));
                 }
             }
         }

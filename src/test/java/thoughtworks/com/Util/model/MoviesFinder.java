@@ -1,4 +1,4 @@
-package thoughtworks.com.Util.model;
+package thoughtworks.com.util.model;
 
 import java.util.List;
 

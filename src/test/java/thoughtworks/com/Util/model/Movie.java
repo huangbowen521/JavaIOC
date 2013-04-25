@@ -1,4 +1,4 @@
-package thoughtworks.com.Util.model;
+package thoughtworks.com.util.model;
 
 /**
  * Created with IntelliJ IDEA.

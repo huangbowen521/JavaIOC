@@ -1,8 +1,9 @@
 package thoughtworks.com.core.config;
 
 import org.junit.Test;
-import thoughtworks.com.Util.model.MoviesFinderImpl;
-import thoughtworks.com.core.context.ApplicationContext;
+import thoughtworks.com.util.model.MoviesFinderImpl;
+import thoughtworks.com.core.context.Container;
+import thoughtworks.com.properties.SetterProperty;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -23,11 +24,11 @@ public class SetterPropertyTest {
 
         // given
         SetterProperty setterProperty = new SetterProperty("finder", "moviesFinder");
-        ApplicationContext applicationContext = mock(ApplicationContext.class);
-        given(applicationContext.getBean("moviesFinder")).willReturn(new MoviesFinderImpl());
+        Container container = mock(Container.class);
+        given(container.getBean("moviesFinder")).willReturn(new MoviesFinderImpl());
 
         // when
-        Object thisInstance = setterProperty.getThisInstance(applicationContext);
+        Object thisInstance = setterProperty.getThisInstance(container);
 
         // then
         assertThat(thisInstance, instanceOf(MoviesFinderImpl.class));

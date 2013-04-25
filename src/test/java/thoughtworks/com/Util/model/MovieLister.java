@@ -1,4 +1,4 @@
-package thoughtworks.com.Util.model;
+package thoughtworks.com.util.model;
 
 import com.google.common.base.Predicate;
 import com.sun.istack.internal.Nullable;
@@ -17,6 +17,10 @@ import static com.google.common.collect.Lists.newArrayList;
  * To change this template use File | Settings | File Templates.
  */
 public class MovieLister {
+
+    public MoviesFinder getMoviesFinder() {
+        return moviesFinder;
+    }
 
     private MoviesFinder moviesFinder;
 

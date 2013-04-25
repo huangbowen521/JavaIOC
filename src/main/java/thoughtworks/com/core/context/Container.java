@@ -7,7 +7,7 @@ package thoughtworks.com.core.context;
  * Time: 11:42 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface ApplicationContext {
+public interface Container {
     <T> T getBean(String beanName) throws InstantiationException, IllegalAccessException;
 
 }

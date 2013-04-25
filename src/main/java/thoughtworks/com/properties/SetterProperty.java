@@ -1,6 +1,6 @@
-package thoughtworks.com.core.config;
+package thoughtworks.com.properties;
 
-import thoughtworks.com.core.context.ApplicationContext;
+import thoughtworks.com.core.context.Container;
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,7 +9,7 @@ import thoughtworks.com.core.context.ApplicationContext;
  * Time: 11:46 PM
  * To change this template use File | Settings | File Templates.
  */
-public class SetterProperty {
+public class SetterProperty implements Property {
     public String getName() {
         return name;
     }
@@ -34,7 +34,7 @@ public class SetterProperty {
         this.ref = ref;
     }
 
-    public Object getThisInstance(ApplicationContext applicationContext) throws IllegalAccessException, InstantiationException {
-        return applicationContext.getBean(ref);
+    public Object getThisInstance(Container container) throws InstantiationException, IllegalAccessException {
+        return container.getBean(ref);
     }
 }

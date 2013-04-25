@@ -1,5 +1,7 @@
 package thoughtworks.com.core.config;
 
+import thoughtworks.com.properties.SetterProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 

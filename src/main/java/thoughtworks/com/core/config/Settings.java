@@ -9,6 +9,6 @@ import java.util.List;
  * Time: 11:45 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface Configs {
+public interface Settings {
     List<BeanSetting> getBeanConfigs();
 }
