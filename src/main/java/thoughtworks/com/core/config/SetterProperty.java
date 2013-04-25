@@ -7,7 +7,7 @@ package thoughtworks.com.core.config;
  * Time: 11:46 PM
  * To change this template use File | Settings | File Templates.
  */
-public class BeanProperty {
+public class SetterProperty {
     public String getName() {
         return name;
     }
@@ -27,7 +27,7 @@ public class BeanProperty {
     private String name;
     private String ref;
 
-    public BeanProperty(String name, String ref) {
+    public SetterProperty(String name, String ref) {
         this.name = name;
         this.ref = ref;
     }

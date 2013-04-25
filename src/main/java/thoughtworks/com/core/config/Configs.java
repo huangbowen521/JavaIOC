@@ -10,5 +10,5 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public interface Configs {
-    List<BeanConfig> getBeanConfigs();
+    List<BeanSetting> getBeanConfigs();
 }

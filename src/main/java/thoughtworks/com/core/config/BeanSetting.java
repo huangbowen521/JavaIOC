@@ -10,7 +10,7 @@ import java.util.List;
  * Time: 11:45 PM
  * To change this template use File | Settings | File Templates.
  */
-public class BeanConfig {
+public class BeanSetting {
     public String getName() {
         return name;
     }
@@ -30,20 +30,20 @@ public class BeanConfig {
     private String name;
     private String className;
 
-    public List<BeanProperty> getBeanProperties() {
-        return beanProperties;
+    public List<SetterProperty> getSetterProperties() {
+        return setterProperties;
     }
 
-    private List<BeanProperty> beanProperties;
+    private List<SetterProperty> setterProperties;
 
-    public void addBeanProperty(BeanProperty beanProperty)
+    public void addBeanProperty(SetterProperty setterProperty)
     {
-        beanProperties.add(beanProperty);
+        setterProperties.add(setterProperty);
     }
 
-    public BeanConfig(String name, String className) {
+    public BeanSetting(String name, String className) {
         this.name = name;
         this.className = className;
-        beanProperties = new ArrayList<BeanProperty>();
+        setterProperties = new ArrayList<SetterProperty>();
     }
 }

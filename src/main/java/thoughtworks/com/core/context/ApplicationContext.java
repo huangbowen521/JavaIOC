@@ -1,10 +1,5 @@
 package thoughtworks.com.core.context;
 
-import thoughtworks.com.core.config.BeanProperty;
-
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created with IntelliJ IDEA.
  * User: twer

@@ -1,7 +1,7 @@
 package thoughtworks.com.core.context;
 
 import org.junit.Test;
-import thoughtworks.com.core.config.BeanConfig;
+import thoughtworks.com.core.config.BeanSetting;
 import thoughtworks.com.core.config.Configs;
 
 import java.util.ArrayList;
@@ -24,15 +24,17 @@ public class ApplicationContextImplTest {
     public void shouldGetCorrectBeanWithoutProperty() throws Exception {
         // given
         Configs configs = new Configs() {
-            public List<BeanConfig> getBeanConfigs() {
-                ArrayList<BeanConfig> beanConfigs = new ArrayList<BeanConfig>();
-                beanConfigs.add(new BeanConfig("date", "java.util.Date"));
-                return beanConfigs;
+            public List<BeanSetting> getBeanConfigs() {
+                ArrayList<BeanSetting> beanSettings = new ArrayList<BeanSetting>();
+                beanSettings.add(new BeanSetting("date", "java.util.Date"));
+
+                return beanSettings;
             }
         };
 
         // when
         ApplicationContextImpl applicationContext = new ApplicationContextImpl(configs);
+
 
         // then
         assertThat(applicationContext.getBean("date"), instanceOf(Date.class));
@@ -43,10 +45,11 @@ public class ApplicationContextImplTest {
     public void shouldGetCorrectBeanWithProperty() {
         //given
         Configs configs = new Configs() {
-            public List<BeanConfig> getBeanConfigs() {
-                ArrayList<BeanConfig> beanConfigs = new ArrayList<BeanConfig>();
-                beanConfigs.add(new BeanConfig("date", "java.util.Date"));
-                return beanConfigs;
+            public List<BeanSetting> getBeanConfigs() {
+                ArrayList<BeanSetting> beanSettings = new ArrayList<BeanSetting>();
+                BeanSetting date = new BeanSetting("date", "java.util.Date");
+                beanSettings.add(date);
+                return beanSettings;
             }
         };
 

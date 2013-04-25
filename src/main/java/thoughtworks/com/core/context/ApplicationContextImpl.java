@@ -1,7 +1,7 @@
 package thoughtworks.com.core.context;
 
-import thoughtworks.com.core.config.BeanConfig;
-import thoughtworks.com.core.config.BeanProperty;
+import thoughtworks.com.core.config.BeanSetting;
+import thoughtworks.com.core.config.SetterProperty;
 import thoughtworks.com.core.config.Configs;
 
 import java.lang.reflect.InvocationTargetException;
@@ -33,13 +33,13 @@ public class ApplicationContextImpl implements ApplicationContext {
 
     private void initBeans()
     {
-        for(BeanConfig beanConfig : configs.getBeanConfigs())
+        for(BeanSetting beanSetting : configs.getBeanConfigs())
         {
             try {
-                Object bean = this.getClass().getClassLoader().loadClass(beanConfig.getClassName()).newInstance();
-                beans.put(beanConfig.getName(), bean);
-                clazzs.put(beanConfig.getName(), Class.forName(beanConfig.getClassName()));
-                initProperties(beanConfig);
+                Object bean = this.getClass().getClassLoader().loadClass(beanSetting.getClassName()).newInstance();
+                beans.put(beanSetting.getName(), bean);
+                clazzs.put(beanSetting.getName(), Class.forName(beanSetting.getClassName()));
+                initProperties(beanSetting);
 
             } catch (InstantiationException e) {
                 e.printStackTrace();
@@ -51,17 +51,17 @@ public class ApplicationContextImpl implements ApplicationContext {
         }
     }
 
-    private void initProperties(BeanConfig beanConfig)
+    private void initProperties(BeanSetting beanSetting)
     {
-        Object bean = beans.get(beanConfig.getName());
+        Object bean = beans.get(beanSetting.getName());
         Method[] methods = bean.getClass().getMethods();
-        for (BeanProperty beanProperty : beanConfig.getBeanProperties())
+        for (SetterProperty setterProperty : beanSetting.getSetterProperties())
         {
             for(Method method : methods)
             {
-                if (method.getName().startsWith("set") && method.getName().substring(3).equalsIgnoreCase(beanProperty.getName())){
+                if (method.getName().startsWith("set") && method.getName().substring(3).equalsIgnoreCase(setterProperty.getName())){
                     try {
-                        method.invoke(bean,clazzs.get(beanProperty.getRef()).newInstance());
+                        method.invoke(bean,clazzs.get(setterProperty.getRef()).newInstance());
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                     } catch (InvocationTargetException e) {
