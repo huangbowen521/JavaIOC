@@ -1,12 +1,15 @@
 package thoughtworks.com.core.context;
 
 import org.junit.Test;
+import thoughtworks.com.core.config.BeanSetting;
 import thoughtworks.com.util.config.BeanSettingImpl;
-import thoughtworks.com.util.model.MovieLister;
 import thoughtworks.com.util.model.MoviesFinderImpl;
+import thoughtworks.com.util.model.Person;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
+import static org.hamcrest.core.IsNot.not;
 
 
 /**
@@ -27,15 +30,45 @@ public class ContainerImplTest {
         assertThat(applicationContext.getBean("moviesFinder"), instanceOf(MoviesFinderImpl.class));
     }
 
-
     @Test
-    public void shouldGetCorrectBeanWithProperty() {
-        //when
-        ContainerImpl applicationContext = new ContainerImpl(new BeanSettingImpl());
+    public void shouldGetSingletonBeanIfAnnotatedSingleton() {
+        // given
+        BeanSettingImpl beanSetting = new BeanSettingImpl();
+        beanSetting.add(new BeanSetting("person", "thoughtworks.com.util.model.Person"));
+
+        // when
+        ContainerImpl container = new ContainerImpl(beanSetting);
 
         //then
-        assertThat(((MovieLister) applicationContext.getBean("movieLister")).getMoviesFinder(), instanceOf(MoviesFinderImpl.class));
+        Person person = container.getBean("person");
+        Person person1 = container.getBean("person");
+        assertThat(person, is(person1));
     }
+
+    @Test
+    public void shouldGetDifferentBeanIfNotAnnotatedSingleton() {
+        //given
+        BeanSettingImpl beanSetting = new BeanSettingImpl();
+        beanSetting.add(new BeanSetting("moviesFinder", "thoughtworks.com.util.model.MoviesFinderImpl"));
+
+        // when
+        ContainerImpl container = new ContainerImpl(beanSetting);
+
+        // then
+        MoviesFinderImpl moviesFinder1 = container.getBean("moviesFinder");
+        MoviesFinderImpl moviesFinder2 = container.getBean("moviesFinder");
+        assertThat(moviesFinder1, is(not(moviesFinder2)));
+    }
+
+
+    //    @Test
+//    public void shouldGetCorrectBeanWithProperty() {
+//        //when
+//        ContainerImpl applicationContext = new ContainerImpl(new BeanSettingImpl());
+//
+//        //then
+//        assertThat(((MovieLister) applicationContext.getBean("movieLister")).getMoviesFinder(), instanceOf(MoviesFinderImpl.class));
+//    }
 
 
 }

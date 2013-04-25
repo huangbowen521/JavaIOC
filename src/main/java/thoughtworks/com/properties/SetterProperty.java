@@ -34,7 +34,7 @@ public class SetterProperty implements Property {
         this.ref = ref;
     }
 
-    public Object getThisInstance(Container container) throws InstantiationException, IllegalAccessException {
+    public Object getThisInstance(Container container) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         return container.getBean(ref);
     }
 }

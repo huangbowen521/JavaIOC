@@ -10,5 +10,5 @@ import thoughtworks.com.core.context.Container;
  */
 public interface Property {
 
-     Object getThisInstance(Container container) throws IllegalAccessException, InstantiationException;
+     Object getThisInstance(Container container) throws IllegalAccessException, InstantiationException, ClassNotFoundException;
 }

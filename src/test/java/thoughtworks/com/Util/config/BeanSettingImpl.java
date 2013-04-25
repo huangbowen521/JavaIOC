@@ -1,8 +1,10 @@
 package thoughtworks.com.util.config;
 
-import thoughtworks.com.properties.SetterProperty;
+import thoughtworks.com.core.config.BeanSetting;
 import thoughtworks.com.core.config.Settings;
+import thoughtworks.com.properties.SetterProperty;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.collect.ImmutableList.of;
@@ -16,9 +18,27 @@ import static com.google.common.collect.ImmutableList.of;
  */
 public class BeanSettingImpl implements Settings {
 
+    public BeanSettingImpl() {
+        beanSettings = new ArrayList<BeanSetting>();
+    }
+
+    public void add(BeanSetting setting) {
+        beanSettings.add(setting);
+    }
+
+    private List<BeanSetting> beanSettings;
+
     public List<thoughtworks.com.core.config.BeanSetting> getBeanConfigs() {
-        thoughtworks.com.core.config.BeanSetting serviceSetting = new thoughtworks.com.core.config.BeanSetting("moviesFinder", "thoughtworks.com.util.model.MoviesFinderImpl");
-        thoughtworks.com.core.config.BeanSetting clientSetting = new thoughtworks.com.core.config.BeanSetting("movieLister", "thoughtworks.com.util.model.MovieLister");
+        if (beanSettings.size() <= 0) {
+            return getDefaultSettings();
+        } else {
+            return beanSettings;
+        }
+    }
+
+    private List<BeanSetting> getDefaultSettings() {
+        BeanSetting serviceSetting = new BeanSetting("moviesFinder", "thoughtworks.com.util.model.MoviesFinderImpl");
+        BeanSetting clientSetting = new BeanSetting("movieLister", "thoughtworks.com.util.model.MovieLister");
         SetterProperty setterProperty = new SetterProperty("moviesFinder", "moviesFinder");
         clientSetting.addBeanProperty(setterProperty);
         return of(serviceSetting, clientSetting);

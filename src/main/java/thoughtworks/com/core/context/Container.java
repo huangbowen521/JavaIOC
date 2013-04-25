@@ -8,6 +8,6 @@ package thoughtworks.com.core.context;
  * To change this template use File | Settings | File Templates.
  */
 public interface Container {
-    <T> T getBean(String beanName) throws InstantiationException, IllegalAccessException;
+    <T> T getBean(String beanName) throws InstantiationException, IllegalAccessException, ClassNotFoundException;
 
 }

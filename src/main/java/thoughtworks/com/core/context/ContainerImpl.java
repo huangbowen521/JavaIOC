@@ -1,14 +1,14 @@
 package thoughtworks.com.core.context;
 
 import thoughtworks.com.core.config.BeanSetting;
-import thoughtworks.com.properties.SetterProperty;
 import thoughtworks.com.core.config.Settings;
+import thoughtworks.com.properties.SetterProperty;
 
+import javax.inject.Singleton;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,25 +20,56 @@ import java.util.concurrent.ConcurrentMap;
 public class ContainerImpl implements Container {
 
     private Settings settings;
-    ConcurrentMap<String, Object> beans = new ConcurrentHashMap<String, Object>();
-    ConcurrentMap<String, Class> clazzs = new ConcurrentHashMap<String, Class>();
+    Map<String, Object> singletonBeans = new HashMap<String, java.lang.Object>();
+    Map<String, Class> clazzs = new HashMap<String, Class>();
 
     public ContainerImpl(Settings settings) {
         this.settings = settings;
-        initBeans();
     }
 
-    public <T> T getBean(String beanName)  {
-        return (T)beans.get(beanName);
+    public <T> T getBean(String beanName) {
+        if (singletonBeans.containsKey(beanName)) {
+            return (T) singletonBeans.get(beanName);
+        } else {
+            for (BeanSetting beanSetting : settings.getBeanConfigs()) {
+                if (beanName.equals(beanSetting.getName())) {
+                    try {
+                        T bean = getInstanceBy(beanSetting.getClassName());
+                        if (Class.forName(beanSetting.getClassName()).isAnnotationPresent(Singleton.class)) {
+                            singletonBeans.put(beanName, bean);
+                        }
+
+                        return bean;
+
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 
-    private void initBeans()
-    {
-        for(BeanSetting beanSetting : settings.getBeanConfigs())
-        {
+    private <T> T getInstanceBy(String name) {
+        try {
+            return (T) this.getClass().getClassLoader().loadClass(name).newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    private void initBeans() {
+        for (BeanSetting beanSetting : settings.getBeanConfigs()) {
             try {
                 Object bean = this.getClass().getClassLoader().loadClass(beanSetting.getClassName()).newInstance();
-                beans.put(beanSetting.getName(), bean);
+                singletonBeans.put(beanSetting.getName(), bean);
                 clazzs.put(beanSetting.getName(), Class.forName(beanSetting.getClassName()));
                 initProperties(beanSetting);
 
@@ -53,18 +84,21 @@ public class ContainerImpl implements Container {
     }
 
     private void initProperties(BeanSetting beanSetting) throws IllegalAccessException, InstantiationException {
-        Object bean = beans.get(beanSetting.getName());
+        Object bean = singletonBeans.get(beanSetting.getName());
         Method[] methods = bean.getClass().getMethods();
 
         Field[] fields = bean.getClass().getDeclaredFields();
 
 
-        for (SetterProperty setterProperty : beanSetting.getSetterProperties())
-        {
-            for (Field filed : fields){
-                if(filed.getName().equalsIgnoreCase(setterProperty.getName())){
+        for (SetterProperty setterProperty : beanSetting.getSetterProperties()) {
+            for (Field filed : fields) {
+                if (filed.getName().equalsIgnoreCase(setterProperty.getName())) {
                     filed.setAccessible(true);
-                    filed.set(bean, setterProperty.getThisInstance(this));
+                    try {
+                        filed.set(bean, setterProperty.getThisInstance(this));
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
