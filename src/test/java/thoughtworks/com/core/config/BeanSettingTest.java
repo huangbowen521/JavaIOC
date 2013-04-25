@@ -1,7 +1,7 @@
 package thoughtworks.com.core.config;
 
 import org.junit.Test;
-import thoughtworks.com.properties.SetterProperty;
+import thoughtworks.com.properties.PropertyImpl;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,7 +15,7 @@ public class BeanSettingTest {
     public void shouldInitPropertiesCorrect() {
         BeanSetting beanSetting = new BeanSetting("movieList", "thoughtworks.com.util.model.MovieLister");
 
-        beanSetting.addBeanProperty(new SetterProperty("moiveFinder", "thoughtworks.com.util.model.MoviesFinderImpl"));
+        beanSetting.addBeanProperty(new PropertyImpl("moiveFinder", "thoughtworks.com.util.model.MoviesFinderImpl"));
 
 
 

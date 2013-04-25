@@ -2,9 +2,12 @@ package thoughtworks.com.core.context;
 
 import org.junit.Test;
 import thoughtworks.com.core.config.BeanSetting;
+import thoughtworks.com.properties.PropertyImpl;
 import thoughtworks.com.util.config.BeanSettingImpl;
+import thoughtworks.com.util.model.Gun;
 import thoughtworks.com.util.model.MoviesFinderImpl;
 import thoughtworks.com.util.model.Person;
+import thoughtworks.com.util.model.Warrior;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -60,6 +63,23 @@ public class ContainerImplTest {
         assertThat(moviesFinder1, is(not(moviesFinder2)));
     }
 
+    @Test
+    public void shouldGetBeanWithConstorctorParameters() {
+        //given
+        BeanSettingImpl beanSetting = new BeanSettingImpl();
+        BeanSetting warriorSetting = new BeanSetting("warrior", "thoughtworks.com.util.model.Warrior");
+        warriorSetting.addConProeprty(new PropertyImpl("weapon", "gun"));
+        beanSetting.add(warriorSetting);
+        beanSetting.add(new BeanSetting("gun", "thoughtworks.com.util.model.Gun"));
+
+        // when
+        ContainerImpl container = new ContainerImpl(beanSetting);
+
+        // then
+        Warrior warrior = container.getBean("warrior");
+        assertThat(warrior.getWeapon(), instanceOf(Gun.class));
+
+    }
 
     //    @Test
 //    public void shouldGetCorrectBeanWithProperty() {

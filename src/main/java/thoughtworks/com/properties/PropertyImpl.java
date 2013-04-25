@@ -9,7 +9,7 @@ import thoughtworks.com.core.context.Container;
  * Time: 11:46 PM
  * To change this template use File | Settings | File Templates.
  */
-public class SetterProperty implements Property {
+public class PropertyImpl implements Property {
     public String getName() {
         return name;
     }
@@ -29,7 +29,7 @@ public class SetterProperty implements Property {
     private String name;
     private String ref;
 
-    public SetterProperty(String name, String ref) {
+    public PropertyImpl(String name, String ref) {
         this.name = name;
         this.ref = ref;
     }

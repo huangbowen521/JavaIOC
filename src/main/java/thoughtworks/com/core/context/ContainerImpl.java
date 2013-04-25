@@ -1,11 +1,17 @@
 package thoughtworks.com.core.context;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+import com.sun.istack.internal.Nullable;
 import thoughtworks.com.core.config.BeanSetting;
 import thoughtworks.com.core.config.Settings;
-import thoughtworks.com.properties.SetterProperty;
+import thoughtworks.com.properties.PropertyImpl;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +40,7 @@ public class ContainerImpl implements Container {
             for (BeanSetting beanSetting : settings.getBeanConfigs()) {
                 if (beanName.equals(beanSetting.getName())) {
                     try {
-                        T bean = getInstanceBy(beanSetting.getClassName());
+                        T bean = getInstanceBy(beanSetting);
                         if (Class.forName(beanSetting.getClassName()).isAnnotationPresent(Singleton.class)) {
                             singletonBeans.put(beanName, bean);
                         }
@@ -51,9 +57,43 @@ public class ContainerImpl implements Container {
         return null;
     }
 
-    private <T> T getInstanceBy(String name) {
+    private <T> T getInstanceBy(BeanSetting beanSetting) {
         try {
-            return (T) this.getClass().getClassLoader().loadClass(name).newInstance();
+            if (beanSetting.getConProperties().size() > 0) {
+                Constructor<?>[] constructors = Class.forName(beanSetting.getClassName()).getConstructors();
+
+                final Container that = this;
+                Object[] objects = Lists.transform(beanSetting.getConProperties(), new Function<PropertyImpl, Object>() {
+                    public Object apply(@Nullable PropertyImpl input) {
+                        try {
+                            return that.getBean(input.getRef());
+                        } catch (InstantiationException e) {
+                            e.printStackTrace();
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
+
+                        return null;
+                    }
+
+                    ;
+                }).toArray();
+                for (Constructor constructor : constructors) {
+                    if (constructor.isAnnotationPresent(Inject.class)) {
+                        try {
+                            return (T) constructor.newInstance(objects);
+                        } catch (InvocationTargetException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+            } else {
+
+                return (T) this.getClass().getClassLoader().loadClass(beanSetting.getClassName()).newInstance();
+            }
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -90,7 +130,7 @@ public class ContainerImpl implements Container {
         Field[] fields = bean.getClass().getDeclaredFields();
 
 
-        for (SetterProperty setterProperty : beanSetting.getSetterProperties()) {
+        for (PropertyImpl setterProperty : beanSetting.getSetterProperties()) {
             for (Field filed : fields) {
                 if (filed.getName().equalsIgnoreCase(setterProperty.getName())) {
                     filed.setAccessible(true);

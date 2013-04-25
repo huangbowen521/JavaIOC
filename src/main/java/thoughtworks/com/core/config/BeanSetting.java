@@ -1,6 +1,6 @@
 package thoughtworks.com.core.config;
 
-import thoughtworks.com.properties.SetterProperty;
+import thoughtworks.com.properties.PropertyImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +13,12 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class BeanSetting {
+    public ArrayList<PropertyImpl> getConProperties() {
+        return conProperties;
+    }
+
+    private ArrayList<PropertyImpl> conProperties;
+
     public String getName() {
         return name;
     }
@@ -32,20 +38,25 @@ public class BeanSetting {
     private String name;
     private String className;
 
-    public List<SetterProperty> getSetterProperties() {
+    public List<PropertyImpl> getSetterProperties() {
         return setterProperties;
     }
 
-    private List<SetterProperty> setterProperties;
+    private List<PropertyImpl> setterProperties;
 
-    public void addBeanProperty(SetterProperty setterProperty)
+    public void addBeanProperty(PropertyImpl setterProperty)
     {
         setterProperties.add(setterProperty);
+    }
+
+    public void addConProeprty(PropertyImpl conProperty) {
+        conProperties.add(conProperty);
     }
 
     public BeanSetting(String name, String className) {
         this.name = name;
         this.className = className;
-        setterProperties = new ArrayList<SetterProperty>();
+        setterProperties = new ArrayList<PropertyImpl>();
+        this.conProperties = new ArrayList<PropertyImpl>();
     }
 }
