@@ -116,14 +116,8 @@ public class ContainerImpl implements Container {
                 if (filed.getName().equalsIgnoreCase(setterProperty.getName())) {
                     filed.setAccessible(true);
                     try {
-                        try {
-                            filed.set(bean, setterProperty.getThisInstance(this));
-                        } catch (IllegalAccessException e) {
-                            e.printStackTrace();
-                        } catch (InstantiationException e) {
-                            e.printStackTrace();
-                        }
-                    } catch (ClassNotFoundException e) {
+                        filed.set(bean, this.getBean(setterProperty.getRef()));
+                    } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     }
                 }

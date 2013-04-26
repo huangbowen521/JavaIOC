@@ -33,8 +33,4 @@ public class Property {
         this.name = name;
         this.ref = ref;
     }
-
-    public Object getThisInstance(Container container) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-        return container.getBean(ref);
-    }
 }

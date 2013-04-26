@@ -89,7 +89,6 @@ public class ContainerImplTest {
         beanSetting.add(serviceSetting);
         beanSetting.add(clientSetting);
 
-
         //when
         ContainerImpl applicationContext = new ContainerImpl(beanSetting);
 
