@@ -2,6 +2,7 @@ package thoughtworks.com.core.context;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import com.sun.istack.internal.Nullable;
 import thoughtworks.com.core.config.BeanSetting;
@@ -31,7 +32,6 @@ public class ContainerImpl implements Container {
 
     private Settings settings;
     Map<String, Object> singletonBeans = new HashMap<String, java.lang.Object>();
-    Map<String, Class> clazzs = new HashMap<String, Class>();
 
     public ContainerImpl(Settings settings) {
         this.settings = settings;
@@ -132,6 +132,8 @@ public class ContainerImpl implements Container {
                     }
                 }
             }
+
+
         }
     }
 
