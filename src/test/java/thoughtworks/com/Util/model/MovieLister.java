@@ -3,6 +3,7 @@ package thoughtworks.com.util.model;
 import com.google.common.base.Predicate;
 import com.sun.istack.internal.Nullable;
 
+import javax.inject.Inject;
 import java.util.List;
 
 import static com.google.common.collect.Iterables.filter;
@@ -22,6 +23,7 @@ public class MovieLister {
         return moviesFinder;
     }
 
+    @Inject
     private MoviesFinder moviesFinder;
 
     public List<Movie> findMoviesByDirector(final String director) {

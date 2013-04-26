@@ -1,6 +1,7 @@
 package thoughtworks.com.core.context;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.sun.istack.internal.Nullable;
 import thoughtworks.com.core.config.BeanSetting;
@@ -12,8 +13,12 @@ import javax.inject.Singleton;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.google.common.collect.Collections2.filter;
 
 /**
  * Created with IntelliJ IDEA.
@@ -107,12 +112,17 @@ public class ContainerImpl implements Container {
         return bean;
     }
 
-    private void injectFields(Object bean, BeanSetting beanSetting)  {
+    private void injectFields(Object bean, BeanSetting beanSetting) {
 
         Field[] fields = bean.getClass().getDeclaredFields();
+        Collection<Field> annotatedFields = filter(Arrays.asList(fields), new Predicate<Field>() {
+            public boolean apply(@Nullable Field input) {
+                return input.isAnnotationPresent(Inject.class);
+            }
+        });
 
         for (Property setterProperty : beanSetting.getSetterProperties()) {
-            for (Field filed : fields) {
+            for (Field filed : annotatedFields) {
                 if (filed.getName().equalsIgnoreCase(setterProperty.getName())) {
                     filed.setAccessible(true);
                     try {
