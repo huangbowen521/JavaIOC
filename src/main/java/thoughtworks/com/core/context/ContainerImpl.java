@@ -5,14 +5,13 @@ import com.google.common.collect.Lists;
 import com.sun.istack.internal.Nullable;
 import thoughtworks.com.core.config.BeanSetting;
 import thoughtworks.com.core.config.Settings;
-import thoughtworks.com.properties.PropertyImpl;
+import thoughtworks.com.properties.Property;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -65,8 +64,8 @@ public class ContainerImpl implements Container {
                 Constructor<?>[] constructors = Class.forName(beanSetting.getClassName()).getConstructors();
 
                 final Container that = this;
-                Object[] objects = Lists.transform(beanSetting.getConProperties(), new Function<PropertyImpl, Object>() {
-                    public Object apply(@Nullable PropertyImpl input) {
+                Object[] objects = Lists.transform(beanSetting.getConProperties(), new Function<Property, Object>() {
+                    public Object apply(@Nullable Property input) {
                         try {
                             return that.getBean(input.getRef());
                         } catch (InstantiationException e) {
@@ -112,7 +111,7 @@ public class ContainerImpl implements Container {
 
         Field[] fields = bean.getClass().getDeclaredFields();
 
-        for (PropertyImpl setterProperty : beanSetting.getSetterProperties()) {
+        for (Property setterProperty : beanSetting.getSetterProperties()) {
             for (Field filed : fields) {
                 if (filed.getName().equalsIgnoreCase(setterProperty.getName())) {
                     filed.setAccessible(true);

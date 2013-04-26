@@ -2,7 +2,7 @@ package thoughtworks.com.util.config;
 
 import thoughtworks.com.core.config.BeanSetting;
 import thoughtworks.com.core.config.Settings;
-import thoughtworks.com.properties.PropertyImpl;
+import thoughtworks.com.properties.Property;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ public class BeanSettingImpl implements Settings {
     private List<BeanSetting> getDefaultSettings() {
         BeanSetting serviceSetting = new BeanSetting("moviesFinder", "thoughtworks.com.util.model.MoviesFinderImpl");
         BeanSetting clientSetting = new BeanSetting("movieLister", "thoughtworks.com.util.model.MovieLister");
-        PropertyImpl setterProperty = new PropertyImpl("moviesFinder", "moviesFinder");
+        Property setterProperty = new Property("moviesFinder", "moviesFinder");
         clientSetting.addSetterProperty(setterProperty);
         return of(serviceSetting, clientSetting);
     }

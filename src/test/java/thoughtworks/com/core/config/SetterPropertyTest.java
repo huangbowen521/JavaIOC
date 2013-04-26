@@ -18,7 +18,7 @@ public class SetterPropertyTest {
     public void shouldGetCorrectObject() throws IllegalAccessException, InstantiationException {
 
 //        // given
-//        PropertyImpl setterProperty = new PropertyImpl("finder", "moviesFinder");
+//        Property setterProperty = new Property("finder", "moviesFinder");
 //        Container container = mock(Container.class);
 //        given(container.getBean("moviesFinder")).willReturn(new MoviesFinderImpl());
 //

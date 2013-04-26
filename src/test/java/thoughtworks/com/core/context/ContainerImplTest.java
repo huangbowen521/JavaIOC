@@ -2,7 +2,7 @@ package thoughtworks.com.core.context;
 
 import org.junit.Test;
 import thoughtworks.com.core.config.BeanSetting;
-import thoughtworks.com.properties.PropertyImpl;
+import thoughtworks.com.properties.Property;
 import thoughtworks.com.util.config.BeanSettingImpl;
 import thoughtworks.com.util.model.*;
 
@@ -65,7 +65,7 @@ public class ContainerImplTest {
         //given
         BeanSettingImpl beanSetting = new BeanSettingImpl();
         BeanSetting warriorSetting = new BeanSetting("warrior", "thoughtworks.com.util.model.Warrior");
-        warriorSetting.addConProeprty(new PropertyImpl("weapon", "gun"));
+        warriorSetting.addConProeprty(new Property("weapon", "gun"));
         beanSetting.add(warriorSetting);
         beanSetting.add(new BeanSetting("gun", "thoughtworks.com.util.model.Gun"));
 
@@ -84,7 +84,7 @@ public class ContainerImplTest {
         BeanSettingImpl beanSetting = new BeanSettingImpl();
         BeanSetting serviceSetting = new BeanSetting("moviesFinder", "thoughtworks.com.util.model.MoviesFinderImpl");
         BeanSetting clientSetting = new BeanSetting("movieLister", "thoughtworks.com.util.model.MovieLister");
-        PropertyImpl setterProperty = new PropertyImpl("moviesFinder", "moviesFinder");
+        Property setterProperty = new Property("moviesFinder", "moviesFinder");
         clientSetting.addSetterProperty(setterProperty);
         beanSetting.add(serviceSetting);
         beanSetting.add(clientSetting);
