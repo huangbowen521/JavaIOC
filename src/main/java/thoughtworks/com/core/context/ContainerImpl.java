@@ -58,7 +58,9 @@ public class ContainerImpl implements Container {
     }
 
     private <T> T getInstanceBy(BeanSetting beanSetting) {
+        T bean = null;
         try {
+
             if (beanSetting.getConProperties().size() > 0) {
                 Constructor<?>[] constructors = Class.forName(beanSetting.getClassName()).getConstructors();
 
@@ -83,16 +85,15 @@ public class ContainerImpl implements Container {
                 for (Constructor constructor : constructors) {
                     if (constructor.isAnnotationPresent(Inject.class)) {
                         try {
-                            return (T) constructor.newInstance(objects);
+                            bean = (T) constructor.newInstance(objects);
                         } catch (InvocationTargetException e) {
                             e.printStackTrace();
                         }
-
                     }
                 }
             } else {
 
-                return (T) this.getClass().getClassLoader().loadClass(beanSetting.getClassName()).newInstance();
+                bean = (T) this.getClass().getClassLoader().loadClass(beanSetting.getClassName()).newInstance();
             }
         } catch (InstantiationException e) {
             e.printStackTrace();
@@ -102,40 +103,27 @@ public class ContainerImpl implements Container {
             e.printStackTrace();
         }
 
-        return null;
+        injectFields(bean, beanSetting);
+
+        return bean;
     }
 
-    private void initBeans() {
-        for (BeanSetting beanSetting : settings.getBeanConfigs()) {
-            try {
-                Object bean = this.getClass().getClassLoader().loadClass(beanSetting.getClassName()).newInstance();
-                singletonBeans.put(beanSetting.getName(), bean);
-                clazzs.put(beanSetting.getName(), Class.forName(beanSetting.getClassName()));
-                initProperties(beanSetting);
-
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void initProperties(BeanSetting beanSetting) throws IllegalAccessException, InstantiationException {
-        Object bean = singletonBeans.get(beanSetting.getName());
-        Method[] methods = bean.getClass().getMethods();
+    private void injectFields(Object bean, BeanSetting beanSetting)  {
 
         Field[] fields = bean.getClass().getDeclaredFields();
-
 
         for (PropertyImpl setterProperty : beanSetting.getSetterProperties()) {
             for (Field filed : fields) {
                 if (filed.getName().equalsIgnoreCase(setterProperty.getName())) {
                     filed.setAccessible(true);
                     try {
-                        filed.set(bean, setterProperty.getThisInstance(this));
+                        try {
+                            filed.set(bean, setterProperty.getThisInstance(this));
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        } catch (InstantiationException e) {
+                            e.printStackTrace();
+                        }
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
                     }

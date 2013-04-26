@@ -15,7 +15,7 @@ public class BeanSettingTest {
     public void shouldInitPropertiesCorrect() {
         BeanSetting beanSetting = new BeanSetting("movieList", "thoughtworks.com.util.model.MovieLister");
 
-        beanSetting.addBeanProperty(new PropertyImpl("moiveFinder", "thoughtworks.com.util.model.MoviesFinderImpl"));
+        beanSetting.addSetterProperty(new PropertyImpl("moiveFinder", "thoughtworks.com.util.model.MoviesFinderImpl"));
 
 
 

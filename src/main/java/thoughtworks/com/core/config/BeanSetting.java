@@ -44,7 +44,7 @@ public class BeanSetting {
 
     private List<PropertyImpl> setterProperties;
 
-    public void addBeanProperty(PropertyImpl setterProperty)
+    public void addSetterProperty(PropertyImpl setterProperty)
     {
         setterProperties.add(setterProperty);
     }

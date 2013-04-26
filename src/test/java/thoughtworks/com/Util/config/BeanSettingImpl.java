@@ -40,7 +40,7 @@ public class BeanSettingImpl implements Settings {
         BeanSetting serviceSetting = new BeanSetting("moviesFinder", "thoughtworks.com.util.model.MoviesFinderImpl");
         BeanSetting clientSetting = new BeanSetting("movieLister", "thoughtworks.com.util.model.MovieLister");
         PropertyImpl setterProperty = new PropertyImpl("moviesFinder", "moviesFinder");
-        clientSetting.addBeanProperty(setterProperty);
+        clientSetting.addSetterProperty(setterProperty);
         return of(serviceSetting, clientSetting);
     }
 }

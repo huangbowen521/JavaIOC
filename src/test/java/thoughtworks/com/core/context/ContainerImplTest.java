@@ -4,10 +4,7 @@ import org.junit.Test;
 import thoughtworks.com.core.config.BeanSetting;
 import thoughtworks.com.properties.PropertyImpl;
 import thoughtworks.com.util.config.BeanSettingImpl;
-import thoughtworks.com.util.model.Gun;
-import thoughtworks.com.util.model.MoviesFinderImpl;
-import thoughtworks.com.util.model.Person;
-import thoughtworks.com.util.model.Warrior;
+import thoughtworks.com.util.model.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -81,14 +78,24 @@ public class ContainerImplTest {
 
     }
 
-    //    @Test
-//    public void shouldGetCorrectBeanWithProperty() {
-//        //when
-//        ContainerImpl applicationContext = new ContainerImpl(new BeanSettingImpl());
-//
-//        //then
-//        assertThat(((MovieLister) applicationContext.getBean("movieLister")).getMoviesFinder(), instanceOf(MoviesFinderImpl.class));
-//    }
+    @Test
+    public void shouldGetCorrectBeanWithProperty() {
+        // given
+        BeanSettingImpl beanSetting = new BeanSettingImpl();
+        BeanSetting serviceSetting = new BeanSetting("moviesFinder", "thoughtworks.com.util.model.MoviesFinderImpl");
+        BeanSetting clientSetting = new BeanSetting("movieLister", "thoughtworks.com.util.model.MovieLister");
+        PropertyImpl setterProperty = new PropertyImpl("moviesFinder", "moviesFinder");
+        clientSetting.addSetterProperty(setterProperty);
+        beanSetting.add(serviceSetting);
+        beanSetting.add(clientSetting);
+
+
+        //when
+        ContainerImpl applicationContext = new ContainerImpl(beanSetting);
+
+        //then
+        assertThat(((MovieLister) applicationContext.getBean("movieLister")).getMoviesFinder(), instanceOf(MoviesFinderImpl.class));
+    }
 
 
 }
